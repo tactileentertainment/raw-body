@@ -148,18 +148,6 @@ function readStream (stream, encoding, length, limit, callback) {
   var complete = false
   var sync = true
 
-  // check the length and limit options.
-  // note: we intentionally leave the stream paused,
-  // so users should handle the stream themselves.
-  if (limit !== null && length !== null && length > limit) {
-    return done(createError(413, 'request entity too large', {
-      expected: length,
-      length: length,
-      limit: limit,
-      type: 'entity.too.large'
-    }))
-  }
-
   // streams1: assert request encoding is buffer.
   // streams2+: assert the stream encoding is buffer.
   //   stream._decoder: streams1
@@ -249,6 +237,7 @@ function readStream (stream, encoding, length, limit, callback) {
       done(createError(413, 'request entity too large', {
         limit: limit,
         received: received,
+        buffer: buffer.slice(0, 100),
         type: 'entity.too.large'
       }))
     }
